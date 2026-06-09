@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Тренировки">
+  <meta name="format-detection" content="telephone=no">
+  <title>Тренировки A/B/C/D</title>
+  <style>
+    :root{
+      --blue:#102b63;
+      --blue2:#244f9e;
+      --green:#2f8a3b;
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#101828;
+      --muted:#667085;
+      --line:#d8e2f0;
+      --yellow:#fff3c4;
+      --red:#b42318;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    body{padding:14px 12px 32px}
+    .app{max-width:520px;margin:0 auto}
+    .top{
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;border-radius:22px;padding:20px 18px;margin-bottom:12px;
+      box-shadow:0 8px 22px rgba(16,43,99,.18)
+    }
+    .top h1{margin:0 0 6px;font-size:30px;line-height:1.04;font-weight:900}
+    .top p{margin:0;font-size:15px;line-height:1.35;opacity:.95}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;
+      box-shadow:0 4px 14px rgba(16,24,40,.05)
+    }
+    h2{margin:0 0 12px;color:var(--blue);font-size:22px;line-height:1.1}
+    h3{margin:0 0 8px;color:var(--blue);font-size:19px}
+    label{display:block;font-size:13px;font-weight:800;color:var(--muted);margin-bottom:6px}
+    .row{display:flex;gap:10px}
+    .field{flex:1}
+    input{
+      width:100%;font-size:20px;padding:14px 12px;border-radius:16px;border:1px solid var(--line);
+      background:#fff;outline:none;min-height:54px
+    }
+    input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(16,43,99,.1)}
+    button{
+      border:0;border-radius:16px;padding:15px 14px;font-size:17px;font-weight:900;
+      min-height:54px;-webkit-tap-highlight-color:transparent
+    }
+    .primary{background:var(--blue);color:#fff;width:100%;margin-top:12px}
+    .green{background:var(--green);color:#fff;width:100%}
+    .light{background:#eef4ff;color:var(--blue)}
+    .danger{background:#fff1f1;color:var(--red)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .stat{background:#f8fbff;border:1px solid var(--line);border-radius:16px;text-align:center;padding:12px 4px}
+    .num{font-size:24px;font-weight:900;color:var(--blue);line-height:1}
+    .cap{font-size:12px;color:var(--muted);margin-top:6px}
+    .today{border:2px solid var(--blue)}
+    .todayName{font-size:30px;font-weight:900;color:var(--blue);margin:2px 0 4px}
+    .desc{font-size:15px;color:var(--muted);line-height:1.35;margin:0 0 14px}
+    .done{background:#e8f6ec!important;color:var(--green)!important;border:1px solid #b7dfbf}
+    .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .day{
+      border:1px solid var(--line);border-radius:14px;background:#fff;min-height:74px;padding:7px 3px;text-align:center;position:relative
+    }
+    .dow{font-size:13px;font-weight:900;color:var(--muted);margin-bottom:4px}
+    .type{font-size:18px;font-weight:900;color:var(--blue);line-height:1}
+    .rest .type{color:var(--green);font-size:13px;line-height:1.15}
+    .icon{font-size:20px;margin-top:5px}
+    .check{position:absolute;top:4px;right:4px;background:var(--green);color:#fff;width:20px;height:20px;border-radius:50%;font-size:14px;line-height:20px;font-weight:900}
+    .benefit{
+      background:#f8fbff;border:1px solid var(--line);border-radius:16px;padding:13px;line-height:1.35;font-size:15px
+    }
+    .yellow{background:var(--yellow);border:1px solid #f1cf67;border-radius:16px;padding:13px;font-weight:800;line-height:1.35;margin-top:10px}
+    .list{list-style:none;margin:0;padding:0}
+    .list li{border-top:1px solid var(--line);padding:12px 0;line-height:1.35}
+    .list li:first-child{border-top:0}
+    .badge{display:inline-flex;align-items:center;justify-content:center;background:#eef4ff;color:var(--blue);border-radius:50%;width:34px;height:34px;font-weight:900;margin-right:8px}
+    .small{font-size:13px;color:var(--muted);line-height:1.35;margin:10px 0 0}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .notice{
+      background:#fff;border:1px dashed #98a2b3;color:#475467;border-radius:16px;padding:12px;font-size:14px;line-height:1.35;margin-top:12px
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <h1>Домашние тренировки</h1>
+    <p>Отмечай тренировки A / B / C / D, смотри календарь и примерный результат.</p>
+  </div>
+
+  <div class="notice">
+    На iPhone лучше открыть этот файл именно в <b>Safari</b>, затем нажать <b>Поделиться → На экран Домой</b>. Во встроенном просмотрщике ChatGPT кнопки могут работать неправильно.
+  </div>
+
+  <div class="card">
+    <h2>Твои данные</h2>
+    <div class="row">
+      <div class="field">
+        <label>Рост, см</label>
+        <input id="height" type="number" inputmode="numeric" placeholder="175" value="">
+      </div>
+      <div class="field">
+        <label>Вес, кг</label>
+        <input id="weight" type="number" inputmode="decimal" placeholder="100" value="">
+      </div>
+    </div>
+    <button class="primary" id="saveBtn">Сохранить</button>
+    <div class="stats">
+      <div class="stat"><div class="num" id="bmi">—</div><div class="cap">ИМТ</div></div>
+      <div class="stat"><div class="num" id="doneCount">0</div><div class="cap">тренировок</div></div>
+      <div class="stat"><div class="num" id="points">0</div><div class="cap">баллов</div></div>
+    </div>
+  </div>
+
+  <div class="card today">
+    <h2>Сегодня</h2>
+    <div class="todayName" id="todayName">Тренировка</div>
+    <p class="desc" id="todayDesc">Нажми “Обновить”, если день не определился автоматически.</p>
+    <button class="green" id="todayBtn">Отметить выполненной ✅</button>
+  </div>
+
+  <div class="card">
+    <h2>Календарь недели</h2>
+    <div class="calendar" id="calendar">
+      <div class="day"><div class="dow">Пн</div><div class="type">A</div><div class="icon">🏋️</div></div>
+      <div class="day"><div class="dow">Вт</div><div class="type">B</div><div class="icon">💪</div></div>
+      <div class="day rest"><div class="dow">Ср</div><div class="type">Отдых</div><div class="icon">🚶</div></div>
+      <div class="day"><div class="dow">Чт</div><div class="type">C</div><div class="icon">🔥</div></div>
+      <div class="day rest"><div class="dow">Пт</div><div class="type">Растяжка</div><div class="icon">🧘</div></div>
+      <div class="day"><div class="dow">Сб</div><div class="type">D</div><div class="icon">✅</div></div>
+      <div class="day rest"><div class="dow">Вс</div><div class="type">Отдых</div><div class="icon">🌿</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Результат тренировок</h2>
+    <div class="benefit" id="benefitText">
+      Заполни рост и вес, затем отмечай тренировки. Приложение будет считать ИМТ, количество тренировок, баллы и примерные калории.
+    </div>
+    <div class="yellow" id="calories">Примерные калории: укажи вес</div>
+  </div>
+
+  <div class="card">
+    <h2>Состав тренировок</h2>
+    <ul class="list">
+      <li><span class="badge">A</span><b>Классика:</b> отжимания с колен, приседания, мостик, пресс, планка.</li>
+      <li><span class="badge">B</span><b>Спина и корпус:</b> отжимания от стола, выпады, лодочка, супермен, dead bug.</li>
+      <li><span class="badge">C</span><b>Отжимания:</b> узкая и широкая постановка рук, ноги, пресс.</li>
+      <li><span class="badge">D</span><b>Техника:</b> негативные отжимания, пауза внизу, всё тело.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Управление</h2>
+    <div class="actions">
+      <button class="light" id="refreshBtn">Обновить</button>
+      <button class="danger" id="resetBtn">Сбросить</button>
+    </div>
+    <p class="small">Данные сохраняются в Safari на этом iPhone. В просмотрщике ChatGPT сохранение может не работать.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const schedule = {
+    1:{type:'A', name:'Тренировка A', desc:'Классика: отжимания с колен, ноги и пресс.'},
+    2:{type:'B', name:'Тренировка B', desc:'Спина, ноги и корпус.'},
+    3:{type:'Отдых', name:'День отдыха', desc:'Прогулка или восстановление.'},
+    4:{type:'C', name:'Тренировка C', desc:'Разные виды отжиманий + ноги.'},
+    5:{type:'Отдых', name:'Растяжка', desc:'Лёгкая растяжка и восстановление.'},
+    6:{type:'D', name:'Тренировка D', desc:'Техника отжиманий и всё тело.'},
+    0:{type:'Отдых', name:'День отдыха', desc:'Восстановление.'}
+  };
+  const days = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+  const icons = {A:'🏋️',B:'💪',C:'🔥',D:'✅','Отдых':'🌿'};
+  const KEY='homeTrainingAppV2';
+
+  function load(){
+    try { return JSON.parse(localStorage.getItem(KEY)) || {profile:{},done:{}}; }
+    catch(e){ return {profile:{},done:{}}; }
+  }
+  function save(data){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+  }
+  function dateKey(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,'0');
+    const day=String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+  function startOfWeek(d){
+    const x=new Date(d);
+    const day=x.getDay() || 7;
+    x.setDate(x.getDate()-day+1);
+    x.setHours(0,0,0,0);
+    return x;
+  }
+  function bmi(h,w){
+    h=Number(h); w=Number(w);
+    if(!h || !w) return '—';
+    return (w/Math.pow(h/100,2)).toFixed(1);
+  }
+  function workout(d){ return schedule[d.getDay()] || schedule[0]; }
+
+  function renderProfile(){
+    const data=load();
+    const h=data.profile.height || '';
+    const w=data.profile.weight || '';
+    document.getElementById('height').value=h;
+    document.getElementById('weight').value=w;
+    document.getElementById('bmi').textContent=bmi(h,w);
+
+    const count=Object.keys(data.done||{}).length;
+    const points=count*10;
+    document.getElementById('doneCount').textContent=count;
+    document.getElementById('points').textContent=points;
+
+    const kcal=w ? Math.round(count * Number(w) * 4.2) : null;
+    document.getElementById('calories').textContent = kcal ? `Примерные калории: около ${kcal} ккал` : 'Примерные калории: укажи вес';
+    document.getElementById('benefitText').textContent = count
+      ? `Ты выполнил ${count} тренировок. Это укрепляет мышцы, повышает выносливость и помогает держать режим.`
+      : 'Пока нет отмеченных тренировок. Начни с первой галочки.';
+  }
+
+  function renderToday(){
+    const data=load();
+    const d=new Date();
+    const w=workout(d);
+    const k=dateKey(d);
+    document.getElementById('todayName').textContent=w.name;
+    document.getElementById('todayDesc').textContent=w.desc;
+    const btn=document.getElementById('todayBtn');
+    if(w.type==='Отдых'){
+      btn.textContent='Сегодня восстановление 🌿';
+      btn.className='green done';
+    } else if(data.done[k]){
+      btn.textContent='Выполнено ✅';
+      btn.className='green done';
+    } else {
+      btn.textContent='Отметить выполненной ✅';
+      btn.className='green';
+    }
+  }
+
+  function renderCalendar(){
+    const data=load();
+    const cal=document.getElementById('calendar');
+    cal.innerHTML='';
+    const start=startOfWeek(new Date());
+    for(let i=0;i<7;i++){
+      const d=new Date(start);
+      d.setDate(start.getDate()+i);
+      const w=workout(d);
+      const div=document.createElement('div');
+      div.className='day ' + (w.type==='Отдых' ? 'rest' : '');
+      div.innerHTML=`<div class="dow">${days[d.getDay()]}</div><div class="type">${w.type}</div><div class="icon">${icons[w.type]||icons[w.type]||'🏋️'}</div>`;
+      if(data.done[dateKey(d)]) {
+        const c=document.createElement('div');
+        c.className='check';
+        c.textContent='✓';
+        div.appendChild(c);
+      }
+      cal.appendChild(div);
+    }
+  }
+
+  function render(){ renderProfile(); renderToday(); renderCalendar(); }
+
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    const data=load();
+    data.profile.height=Number(document.getElementById('height').value||0);
+    data.profile.weight=Number(document.getElementById('weight').value||0);
+    save(data);
+    render();
+  });
+
+  document.getElementById('todayBtn').addEventListener('click', function(){
+    const d=new Date();
+    const w=workout(d);
+    if(w.type==='Отдых'){
+      alert('Сегодня день восстановления.');
+      return;
+    }
+    const data=load();
+    const k=dateKey(d);
+    if(data.done[k]) delete data.done[k]; else data.done[k]=w.type;
+    save(data);
+    render();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if(confirm('Удалить данные и галочки?')){
+      try{localStorage.removeItem(KEY)}catch(e){}
+      render();
+    }
+  });
+  document.getElementById('refreshBtn').addEventListener('click', render);
+
+  render();
+})();
+</script>
+</body>
+</html>
